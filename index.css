@@ -1,0 +1,99 @@
+* {
+  font-family: 'MuseoModerno', cursive;
+}
+
+body {
+  padding: 0 1rem;
+}
+
+.main-title {
+  font-size: 2.5rem;
+  text-align: center;
+}
+
+.description {
+  text-align: center;
+}
+
+.btn-wrapper {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.btn {
+  font-size: 1.25rem;
+  padding: 0.25rem 1rem;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+}
+
+
+.btn.play {
+  background-color: #4242ff;
+}
+
+.btn.result-toggle {
+  background-color: #ffa500;
+}
+
+.game-content {
+  text-align: center;
+  font-size: 4rem;
+  margin: 1rem 0;
+}
+
+.game-content small {
+  font-size: 1rem;
+  margin-left: -0.7rem;
+}
+
+.result {
+  text-align: center;
+  max-width: 540px;
+  margin: 2rem auto;
+}
+
+.result span:not(:last-child)::after,
+.banner span:not(:last-child)::after,
+.banner strong:not(:last-child)::after{
+  content: ', ';
+}
+
+.banner strong, .banner span {
+  margin-right: 5px;
+}
+
+.banner {
+  overflow: hidden;
+  max-width: 800px;
+  margin: 0 auto;
+  height: 5rem;
+  position: relative;
+  line-height: 5rem;
+  text-align: center;
+}
+
+.banner-content {
+  display: flex;
+  position: absolute;
+  font-size: 2rem;
+  text-align: center;
+}
+
+.red {
+  color: red;
+}
+
+.green {
+  color: #00bd10;
+}
+
+.blue {
+  color: #4242ff;
+}
+
+.hidden {
+  display: none;
+}
