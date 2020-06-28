@@ -37,14 +37,16 @@ const bannerInterval = setInterval(() => {
 const resetGame = () => {
   bannerContent.innerHTML = '';
   result.innerHTML = '';
+  result.classList.add('hidden')
   resultsBtn.classList.add('hidden');
+  resultsBtn.innerText = 'Show all results';
+  resultsBtn.setAttribute('data-toggle', 'off');
   playBtn.innerText = 'Play';
   playBtn.onclick = startGame;
   gameContent.innerHTML = '';
   timer = 0;
   bannerPosition = 0;
   bannerContent.style.left = '';
-  toggleResults(true);
   timeouts.forEach(timeOut => clearTimeout(timeOut));
 }
 
@@ -64,8 +66,8 @@ const startGame = () => {
   });
 }
 
-const toggleResults = (reset = false) => {
-  const showResults = resultsBtn.getAttribute('data-toggle') === 'on' || !reset;
+const toggleResults = () => {
+  const showResults = resultsBtn.getAttribute('data-toggle') === 'on';
   resultsBtn.innerText = showResults ? 'Show all results' : 'Hide all results';
   resultsBtn.setAttribute('data-toggle', showResults ? 'off' : 'on');
   showResults ? result.classList.add('hidden') : result.classList.remove('hidden');
