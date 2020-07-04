@@ -29,13 +29,20 @@ body {
   cursor: pointer;
 }
 
-
 .btn.play {
   background-color: #4242ff;
 }
 
-.btn.result-toggle {
+.btn.pause {
   background-color: #ffa500;
+}
+
+.btn.reset {
+  background-color: red;
+}
+
+.result-toggle {
+  background-color: green;
 }
 
 .game-content {

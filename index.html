@@ -12,6 +12,7 @@
   <meta name="theme-color" content="#ffffff">
   <title>Fizz Buzz</title>
   <link href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/c76c32533c.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="index.css">
   <script src="index.js" defer></script>
 </head>
@@ -24,7 +25,9 @@
     For numbers which are multiples of both three and five print “<strong class="red">FizzBuzz</strong>”.
   </p>
   <div class="btn-wrapper">
-    <button class="btn play">Play</button>
+    <button class="btn play"><i class="fas fa-play-circle"></i> Play</button>
+    <button class="btn pause hidden" data-is-paused="false"><i class="fas fa-pause-circle"></i> Pause</button>
+    <button class="btn reset hidden"><i class="fas fa-stop-circle"></i> Reset</button>
     <button class="btn result-toggle hidden" data-toggle="off">Show all results</button>
   </div>
   <h2 class="game-content"></h2>

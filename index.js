@@ -1,69 +1,95 @@
-let timer = 0;
-let bannerPosition = 0;
-let timerIncrement = 700;
-let resultsBtnEnabled = false;
-const timeouts = [];
+let bannerInterval, timerIncrement = 700, timer = 0, bannerPosition = 0,
+resultsBtnEnabled = false, isPaused = false, timeouts = [];
 
 const playBtn = document.querySelector('.btn.play');
+const pauseBtn = document.querySelector('.btn.pause');
+const resetBtn = document.querySelector('.btn.reset');
 const resultsBtn = document.querySelector('.btn.result-toggle');
+const allBtns = [ playBtn, pauseBtn, resetBtn, resultsBtn ];
 const gameContent = document.querySelector('.game-content');
 const result = document.querySelector('.result');
 const bannerContent = document.querySelector('.banner-content');
 const arr = [...Array(100)].map((_, i) => i + 1);
-const fizzBuzz = arr.map(nr => {
+
+const fizzBuzz = arr.map((nr, i) => {
   if (nr % 15 === 0) {
-    return '<strong class="red">FizzBuzz</strong>';
+    return { item: `<strong class="red">FizzBuzz</strong>`, nr };
   }
   if (nr % 5 === 0) {
-    return '<strong class="green">Buzz</strong>';
+    return { item: `<strong class="green">Buzz</strong>`, nr };
   }
   if (nr % 3 === 0) {
-    return '<strong class="blue">Fizz</strong>'
+    return { item: `<strong class="blue">Fizz</strong>`, nr };
   }
-  return nr;
+  return { item: nr  };
 });
 
-const bannerInterval = setInterval(() => {
-  if (bannerContent.getBoundingClientRect().width > 800) {
-    if (!resultsBtnEnabled) {
-      resultsBtn.classList.remove('hidden');
-      resultsBtnEnabled = true;
+const startBannerInterval = () => {
+  bannerInterval = setInterval(() => {
+    if (bannerContent.getBoundingClientRect().width > 800) {
+      if (!resultsBtnEnabled) {
+        resultsBtn.classList.remove('hidden');
+        resultsBtnEnabled = true;
+      }
+      bannerPosition--;
+      bannerContent.style.left = `${bannerPosition}px`;
     }
-    bannerPosition--;
-    bannerContent.style.left = `${bannerPosition}px`;
-  }
-}, 10);
-
-const resetGame = () => {
-  bannerContent.innerHTML = '';
-  result.innerHTML = '';
-  result.classList.add('hidden')
-  resultsBtn.classList.add('hidden');
-  resultsBtn.innerText = 'Show all results';
-  resultsBtn.setAttribute('data-toggle', 'off');
-  playBtn.innerText = 'Play';
-  playBtn.onclick = startGame;
-  gameContent.innerHTML = '';
-  timer = 0;
-  bannerPosition = 0;
-  bannerContent.style.left = '';
-  timeouts.forEach(timeOut => clearTimeout(timeOut));
+  }, 10);
 }
 
-const startGame = () => {
-  playBtn.onclick = resetGame;
-  playBtn.innerText = 'Reset';
-  fizzBuzz.forEach((item, i) => {
+const resetTimeouts = () => {
+  timeouts.forEach(timeOut => clearTimeout(timeOut));
+  timeouts = [];
+  timer = 0;
+};
+
+const resetGame = () => {
+  toggleShowButtons();
+  bannerContent.innerHTML = '';
+  result.innerHTML = '';
+  resultsBtn.innerText = 'Show all results';
+  resultsBtn.setAttribute('data-toggle', 'off');
+  gameContent.innerHTML = '';
+  bannerPosition = 0;
+  bannerContent.style.left = '';
+  resetTimeouts();
+}
+
+const togglePauseGame = () => {
+  isPaused = pauseBtn.getAttribute('data-is-paused') === 'true';
+  if (isPaused) {
+    const currentIndex = gameContent.getAttribute('data-index');
+    setGameTimeouts(fizzBuzz.slice(currentIndex, fizzBuzz.length));
+    startBannerInterval();
+    pauseBtn.innerHTML = pauseBtn.innerHTML.replace('far', 'fas').replace('Resume', 'Pause');
+  } else {
+    resetTimeouts();
+    clearInterval(bannerInterval);
+    pauseBtn.innerHTML = pauseBtn.innerHTML.replace('fas', 'far').replace('Pause', 'Resume');
+  }
+  pauseBtn.setAttribute('data-is-paused', !isPaused);
+}
+
+const setGameTimeouts = (gameArr) => {
+  gameArr.forEach(({ item, nr }) => {
     timeouts.push(
       setTimeout(() => {
-        gameContent.innerHTML = isNaN(item) ? `${item} <small>(${i+1})</small>` : item;
+        gameContent.innerHTML = isNaN(item) ? `${item} <small>(${nr})</small>` : item;
+        gameContent.setAttribute('data-index', nr || item);
         result.innerHTML += `<span>${item}</span>`;
         bannerContent.innerHTML += `<span>${item}</span>`;
-        fizzBuzz.length === i+1 && setTimeout(() => clearInterval(bannerInterval), 10000);
+        const index = nr || item;
+        fizzBuzz.length === index+1 && setTimeout(() => clearInterval(bannerInterval), 10000);
       }, timer)
     );
     timer += timerIncrement;
   });
+}
+
+const startGame = () => {
+  toggleShowButtons();
+  setGameTimeouts(fizzBuzz);
+  startBannerInterval();
 }
 
 const toggleResults = () => {
@@ -73,5 +99,12 @@ const toggleResults = () => {
   showResults ? result.classList.add('hidden') : result.classList.remove('hidden');
 }
 
+const toggleShowButtons = () => {
+  allBtns.forEach(btn =>
+    btn.className.includes('hidden') ? btn.classList.remove('hidden') : btn.classList.add('hidden'));
+}
+
 playBtn.onclick = startGame;
+pauseBtn.onclick = togglePauseGame;
+resetBtn.onclick = resetGame;
 resultsBtn.onclick = toggleResults;
